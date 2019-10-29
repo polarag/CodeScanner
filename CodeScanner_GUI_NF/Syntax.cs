@@ -20,7 +20,7 @@ namespace CodeScanner_GUI_NF
             keywordsdb.Add("separator", separators);
             keywordsdb.Add("single_operator", single_operators);
             keywordsdb.Add("multi_operator", multi_operators);
-            foreach (string keyword in keywords) descriptordb.Add(keyword, "keyword");
+            foreach (string keyword in keywords) descriptordb.Add(keyword, keyword + " token");
             foreach (string separator in separators) descriptordb.Add(separator, "separator");
             foreach (string _operator in single_operators) descriptordb.Add(_operator, "single operator");
             foreach (string _operator in multi_operators) descriptordb.Add(_operator, "multi operator");
