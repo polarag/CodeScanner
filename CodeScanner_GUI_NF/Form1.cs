@@ -40,7 +40,7 @@ namespace CodeScanner_GUI_NF
         {
             List<string> Tokens;
             listView1.Items.Clear();
-            string text = Regex.Replace(richTextBox1.Text, @"\/\*(.*?)\*\/", "", RegexOptions.Multiline); //Remove comments
+            string text = Regex.Replace(richTextBox1.Text, @"[(\/\*){](.*?)[(\\/)*}]", "", RegexOptions.Multiline); //Remove comments
             foreach (string line in text.Split('\n'))
             {
                 Tokens = _matcher.getTokens(line);
