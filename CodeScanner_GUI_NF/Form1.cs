@@ -41,7 +41,7 @@ namespace CodeScanner_GUI_NF
             List<Token> Tokens;
             listView1.Items.Clear();
             //Remove comments
-            string text = Regex.Replace(richTextBox1.Text, @"\{(.*?)\}", "", RegexOptions.Multiline);
+            string text = Regex.Replace(richTextBox1.Text, @"\{(.[\S\s]*?)\}", "", RegexOptions.Multiline);
             text = Regex.Replace(text, @"\/\*(.*?)\*\/", "", RegexOptions.Multiline); 
             //
             try
