@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -42,8 +43,9 @@ namespace CodeScanner_GUI_NF
             listView1.Items.Clear();
             //Remove comments
             string text = Regex.Replace(richTextBox1.Text, @"\{(.[\S\s]*?)\}", "", RegexOptions.Multiline);
-            text = Regex.Replace(text, @"\/\*(.*?)\*\/", "", RegexOptions.Multiline); 
-            //
+            text = Regex.Replace(text, @"\/\*(.*?)\*\/", "", RegexOptions.Multiline);
+            if (checkBox2.Checked) richTextBox1.Text = text;
+            int _index = 0;
             try
             {
                 foreach (string line in text.Split('\n'))
@@ -52,9 +54,21 @@ namespace CodeScanner_GUI_NF
                     foreach (Token token in Tokens)
                     {
                         var item = new ListViewItem(token.value);
+                        if (checkBox2.Checked)
+                        {
+                            int _found = _index;
+                            while (_found < _index + line.Length && richTextBox1.Find(token.value, _found, _index + line.Length, RichTextBoxFinds.None) != -1)
+                            {
+                                _found = richTextBox1.Find(token.value, _found, _index + line.Length, RichTextBoxFinds.None);
+                                richTextBox1.Select(_found, token.value.Length);
+                                richTextBox1.SelectionColor = _matcher.getColor(token.type);
+                                _found++;
+                            }
+                        }
                         item.SubItems.Add(token.type);
                         listView1.Items.Add(item);
                     }
+                    _index += line.Length +1;
                 }
             }
             catch (Exception ex)
