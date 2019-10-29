@@ -16,7 +16,7 @@ namespace CodeScanner_GUI_NF
             string[] keywords = { "WRITE", "READ", "IF", "ELSE", "RETURN", "BEGIN", "END", "MAIN", "STRING", "INT", "REAL" };
             string[] separators = { ";", ",", "(", ")", "[", "]" };
             string[] single_operators = { "+", "-", "*", "/" };
-            string[] multi_operators = { ":=", "==", "!=" };
+            string[] multi_operators = { ":=", "==", "!=", "<", "=", ">", ">=", "<=" };
             keywordsdb.Add("keyword", keywords);
             keywordsdb.Add("separator", separators);
             keywordsdb.Add("single_operator", single_operators);
@@ -69,6 +69,9 @@ namespace CodeScanner_GUI_NF
                 foreach (string value in keywordsdb[keyword])
                     line = line.Replace(value, " " + value+ " ");
             }
+            line = Regex.Replace(line, @":\s+=", ":=");
+            line = Regex.Replace(line, @"<\s+=", "<=");
+            line = Regex.Replace(line, @">\s+=", ">=");
             return line;
         }
         public List<Token> getTokens(string line, bool contOnError = false)
