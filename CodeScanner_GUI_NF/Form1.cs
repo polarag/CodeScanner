@@ -38,19 +38,31 @@ namespace CodeScanner_GUI_NF
 
         private void button1_Click(object sender, EventArgs e)
         {
-            List<string> Tokens;
+            List<Token> Tokens;
             listView1.Items.Clear();
-            string text = Regex.Replace(richTextBox1.Text, @"[(\/\*){](.*?)[(\\/)*}]", "", RegexOptions.Multiline); //Remove comments
-            foreach (string line in text.Split('\n'))
+            //Remove comments
+            string text = Regex.Replace(richTextBox1.Text, @"\{(.*?)\}", "", RegexOptions.Multiline);
+            text = Regex.Replace(text, @"\/\*(.*?)\*\/", "", RegexOptions.Multiline); 
+            //
+            try
             {
-                Tokens = _matcher.getTokens(line);
-                foreach (string token in Tokens)
+                foreach (string line in text.Split('\n'))
                 {
-                    var item = new ListViewItem(token.Split('~')[0]);
-                    item.SubItems.Add(token.Split('~')[1]);
-                    listView1.Items.Add(item);
+                    Tokens = _matcher.getTokens(line, checkBox1.Checked);
+                    foreach (Token token in Tokens)
+                    {
+                        var item = new ListViewItem(token.value);
+                        item.SubItems.Add(token.type);
+                        listView1.Items.Add(item);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                listView1.Items.Clear();
 
+                listView1.Items.Add("AN ERROR OCCURRED.");
+                MessageBox.Show(ex.Message);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,7 +34,7 @@ namespace CodeScanner_GUI_NF
            Multi-character operators:    :=  ==   !=
 
          */
-        public string getTokenType(string match)
+        public string getTokenType(string match, bool contOnError = false)
         {
             if (int.TryParse(match, out int number))
             {
@@ -50,7 +51,15 @@ namespace CodeScanner_GUI_NF
             {
                 return "identifier";
             }
-            return "unknown";
+            if (Regex.Match(match, "^\"(.*?)\"$").Success)
+            {
+                return "string";
+            }
+            if (Regex.Match(match, "^\'(.*?)\'$").Success)
+            {
+                return "character/string";
+            }
+            return contOnError? "unknown" : throw new Exception(" Unknown token type: " + match);
 
         }
         public string filterLine(string line)
@@ -58,19 +67,20 @@ namespace CodeScanner_GUI_NF
             foreach (string keyword in keywordsdb.Keys)
             {
                 foreach (string value in keywordsdb[keyword])
-                    line=  line.Replace(value, " " + value+ " ");
+                    line = line.Replace(value, " " + value+ " ");
             }
             return line;
         }
-        public List<string> getTokens(string line)
+        public List<Token> getTokens(string line, bool contOnError = false)
         {
-            List<string> _return = new List<string>();
+            List<Token> _return = new List<Token>();
             line = filterLine(line); //Remove comments
+            Debug.WriteLine(line);
             foreach (Match match in Regex.Matches(line, @"(\S*)"))
             {
                 if (Regex.Match(match.Value, @"^\s*$", RegexOptions.Multiline).Success) continue;
                 if (match.Value.Length.ToString().Trim().Length > 0)
-                _return.Add(match.Value + "~" + getTokenType(match.Value));
+                _return.Add(new Token(match.Value, getTokenType(match.Value, contOnError)));
             }
             return _return;
         }

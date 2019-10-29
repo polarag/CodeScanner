@@ -5,7 +5,14 @@ using System.Text;
 
 namespace CodeScanner_GUI_NF
 {
-    class Token
+    public class Token
     {
+        public string value;
+        public string type;
+        public Token(string value, string type)
+        {
+            this.value = value;
+            this.type = type;
+        }
     }
 }
