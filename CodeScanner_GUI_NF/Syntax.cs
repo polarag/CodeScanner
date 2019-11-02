@@ -46,7 +46,7 @@ namespace CodeScanner_GUI_NF
         {
             keyword = keyword.ToUpper();
             
-            return colorsdb.Keys.Contains(keyword) ? colorsdb[keyword] : Color.White ;
+            return colorsdb.Keys.Contains(keyword) ? colorsdb[keyword] : Color.Black ;
         }
         /*
            Keywords:   WRITE READ IF ELSE RETURN BEGIN END MAIN STRING INT REAL
